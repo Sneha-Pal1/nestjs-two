@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { HelloModule } from './hello/hello.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './hello/entities/post.entity';
@@ -7,14 +8,13 @@ import { User } from './auth/entities/user.entity';
 import { PostModule } from './post/post.module';
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'sneha',
-      database: 'nestjstwo',
-      entities: [Post, User],
+      url: process.env.DATABASE_URL,
+      entities: [User, Post],
       synchronize: true,
     }),
     AuthModule,
